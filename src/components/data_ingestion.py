@@ -23,39 +23,31 @@ class DataIngestion:
         self.ingestion_config=DataIngestionConfig()
 
     def initiate_data_ingestion(self):
-    logging.info("Entered the data ingestion method or component")
-    try:
-        print("Reading the CSV file...")
-        df = pd.read_csv(r'notebook/data/stud.csv')  # Ensure the correct path format
-        logging.info('Read the dataset as dataframe')
+        logging.info("Entered the data ingestion method or component")
+        try:
+            df=pd.read_csv('notebook\data\stud.csv')
+            logging.info('Read the dataset as dataframe')
 
-        # Print the directory path
-        artifacts_dir = os.path.dirname(self.ingestion_config.train_data_path)
-        print(f"Directory to be created: {artifacts_dir}")
-        
-        # Create directory
-        os.makedirs(artifacts_dir, exist_ok=True)
-        logging.info(f"Created directory: {artifacts_dir}")
-        
-        # Save the raw data
-        df.to_csv(self.ingestion_config.raw_data_path, index=False, header=True)
-        logging.info("Train test split initiated")
+            os.makedirs(os.path.dirname(self.ingestion_config.train_data_path),exist_ok=True)
 
-        # Train-test split
-        train_set, test_set = train_test_split(df, test_size=0.2, random_state=42)
-        train_set.to_csv(self.ingestion_config.train_data_path, index=False, header=True)
-        test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
+            df.to_csv(self.ingestion_config.raw_data_path,index=False,header=True)
 
-        logging.info("Ingestion of the data is completed")
+            logging.info("Train test split initiated")
+            train_set,test_set=train_test_split(df,test_size=0.2,random_state=42)
 
-        return (
-            self.ingestion_config.train_data_path,
-            self.ingestion_config.test_data_path
-        )
-    except Exception as e:
-        logging.error("Error in data ingestion", exc_info=True)
-        raise CustomException(e, sys)
+            train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
 
+            test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
+
+            logging.info("Inmgestion of the data iss completed")
+
+            return(
+                self.ingestion_config.train_data_path,
+                self.ingestion_config.test_data_path
+
+            )
+        except Exception as e:
+            raise CustomException(e,sys)
         
 if __name__=="__main__":
     obj=DataIngestion()
